@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101619">
+<title>Ricochet Circuit</title>
+<link rel="stylesheet" href="./style.css">
+<script type="module" src="./play.mjs"></script>
+<main>
+  <header><a href="../">← Shape Picnic</a><label>Level <select id="level" aria-label="Level"></select></label></header>
+  <h1>Ricochet <span>Circuit</span></h1>
+  <div class="layout">
+    <section class="play" aria-label="Playing area">
+      <svg id="board" role="img" aria-label="Ricochet puzzle board"></svg>
+      <div id="launches" aria-label="Launch points"></div>
+    </section>
+    <aside>
+      <div class="meter"><div><strong id="balls"></strong><small> balls left</small></div><div id="pips" aria-hidden="true"></div></div>
+      <p id="message" role="status"></p>
+      <div id="history" aria-label="Launch order"></div>
+      <div class="controls"><button id="undo">Undo shot</button><button id="reset">Reset</button><button id="next" hidden>Next level →</button></div>
+      <details open><summary>How to play</summary>
+        <p>Launch from a lettered opening. Set up the mirrors so your last ball exits through the green finish.</p>
+        <ul>
+          <li><span class="gate">╱</span> A gold gate redirects the ball by 90° and turns. Strike it the same way again and the ball leaves in the opposite direction.</li>
+          <li><span class="fixed">╱</span> A blue mirror redirects without turning.</li>
+          <li><span class="reverse">⊞</span> A bumper or closed edge sends the ball back.</li>
+        </ul>
+        <p class="keys">Use letter keys to launch. R resets the level.</p>
+      </details>
+    </aside>
+  </div>
+</main>
+</html>

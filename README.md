@@ -36,3 +36,7 @@ node --test tests/*.test.mjs
 The Node tests cover Shape Match progression, memory turns and matches, and every puzzle board. Browser checks exercise the menu, game transitions, wrong choices, replay, and the final memory turn total.
 
 Hermes generated the independently verified Picnic Patterns boards. The broader board-generation and memory patches failed independent checks, so Codex completed those pieces.
+
+## Ricochet Circuit
+
+[Ricochet Circuit](https://btbowles.github.io/Shape-Picnic/ricochet/) is a separate logic puzzle hosted in this repository. Launch balls through lettered ports, flip gold gates, and reach the finish with the last ball. Blue mirrors stay fixed, and bumpers and closed perimeter edges reverse the ball. Its ten levels each have one winning launch sequence and a fixed ball budget. Open `/ricochet/` when running the local server. The Node tests check the reflection rules and search all reachable gate states for trapped shots.
