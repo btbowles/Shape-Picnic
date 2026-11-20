@@ -69,3 +69,30 @@ h1, h2, p { margin: 0; }
 [data-colour="blue"] { filter: hue-rotate(195deg) saturate(1.2); }
 [data-colour="green"] { filter: hue-rotate(85deg) saturate(1.25); }
 #replay:not(.next) .arrow, #replay.next path:not(.arrow) { display: none; }
+.back-games { display: inline-flex; align-items: center; min-height: 44px; color: #345434; font-weight: 850; margin-bottom: 8px; }
+.pick-heading { margin: 0 0 10px; }
+.game-menu { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }
+.game-menu a { display: grid; grid-template-rows: 60px auto; align-items: center; justify-items: center; text-align: center; gap: 3px; padding: 9px; min-height: 106px; border-radius: 20px; color: #253929; background: #fff8e9; border: 2px solid #85945d; font-weight: 850; text-decoration: none; }
+.game-menu a:nth-child(3n+2) { background: #f7e7f1; border-color: #a76a73; }
+.game-menu a:nth-child(3n+3) { background: #e6edcf; }
+.game-menu a:focus-visible, .back-games:focus-visible { outline: 3px solid #695895; outline-offset: 3px; }
+.game-menu img { width: 64px; height: 60px; }
+.suite-meadow { text-align: center; gap: 10px; }
+.suite-meadow h2 { padding: 0 12px; }
+.cue { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; justify-content: center; }
+.cue:empty { display: none; }
+.cue img { width: clamp(30px, 12vw, 54px); }
+.cue span { font-size: 1.7rem; font-weight: 900; }
+.snack-group { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); width: min(100%, 112px); min-width: 58px; min-height: 32px; border-bottom: 3px solid #879b65; border-radius: 0 0 14px 14px; max-height: 125px; }
+.snack-group img { width: 100%; min-height: 0; height: auto; }
+.snack-group img:last-child:nth-child(odd) { grid-column: 1 / -1; width: 50%; justify-self: center; }
+.choice .sized { width: var(--size); height: auto; }
+.card-back { background: #def0c0; border-color: #587541; }
+.card-back img { width: 56%; }
+.choice.removed { visibility: hidden; }
+.prize { width: 115px; }
+.cue .example-picked { outline: 2px solid #506a3d; outline-offset: 1px; border-radius: 12px; }
+.cue .example-small { width: 28px; }
+.cue .snack-group { width: 86px; }
+.cue .snack-group img { width: 100%; }
+.cue .snack-group img:last-child:nth-child(odd) { width: 50%; }

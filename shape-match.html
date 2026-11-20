@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f8ec">
+  <meta name="description" content="A gentle picture-matching picnic for little hands.">
+  <title>Shape Picnic</title>
+  <link rel="icon" href="./assets/flower.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css?v=suite">
+  <script type="module" src="./game.mjs?v=matching"></script>
+</head>
+<body>
+  <main class="picnic">
+    <header class="topbar">
+      <div class="brand"><img src="./assets/flower.svg" alt="" width="46" height="46"><h1>Shape <span>Picnic</span></h1></div>
+      <button id="sound" class="sound" type="button" aria-pressed="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 4V5L7 9H3Z"/><path class="off" d="m16 10 5 5m0-5-5 5"/><path class="on" d="M16 9a4 4 0 0 1 0 6m2-8a7 7 0 0 1 0 10"/></svg>
+        <span>Sound off</span>
+      </button>
+    </header>
+    <a class="back-games" href="./">‹ All games</a>
+    <section id="game" class="game" aria-label="Picture matching game">
+      <div class="meadow">
+        <div class="hills" aria-hidden="true"></div>
+        <span class="spark one" aria-hidden="true">✦</span><span class="spark two" aria-hidden="true">✧</span>
+        <span class="spark three" aria-hidden="true">✿</span><span class="spark four" aria-hidden="true">✦</span>
+        <div class="level-label" id="level"></div>
+        <div id="target" class="target"></div>
+        <div id="progress" class="progress" aria-label="Round progress"></div>
+      </div>
+      <div class="mat">
+        <div class="prompt">
+          <svg viewBox="0 0 36 36" aria-hidden="true"><rect x="4" y="7" width="20" height="20" rx="5"/><rect x="11" y="11" width="20" height="20" rx="5"/><path d="m17 21 3 3 6-7"/></svg>
+          <h2 id="prompt">Tap the match!</h2>
+        </div>
+        <div id="choices" class="choices" aria-labelledby="prompt"></div>
+        <p class="feedback" id="feedback" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+    <section id="finish" class="finish" hidden aria-labelledby="finish-title">
+      <div class="hills" aria-hidden="true"></div>
+      <div class="celebration" aria-hidden="true">✦ <img src="./assets/flower.svg" alt=""> ✦</div>
+      <h2 id="finish-title">Picnic complete!</h2>
+      <button id="replay" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8a8 8 0 1 1-1 7M5 3v5h5"/><path class="arrow" d="M4 12h15m-6-6 6 6-6 6"/></svg> <span>Play again</span></button>
+    </section>
+  </main>
+</body>
+</html>

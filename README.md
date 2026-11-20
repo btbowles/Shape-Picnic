@@ -1,8 +1,18 @@
 # Shape Picnic
 
-A touch-first picnic game for preschoolers with ten levels and three picture matches per level. The board grows from two tiles to six. Later levels show the same shape in different colours and turn the tiles by 90°, 180°, or 270°. Match the shape and colour of the example, even if the tile is sideways or upside down. Wrong choices leave the puzzle open for another try. After Level 10, tap **Play again** to start over.
+A touch-first suite of seven picture games for preschoolers:
 
-Sound starts off. The sound button enables quiet, locally generated tones. The game uses original illustrations and makes no requests for external assets. It has no accounts, ads, or analytics.
+- **Shape Match** grows from two tiles to six over ten levels, adding colours and rotations.
+- **Memory Pairs** deals six face-down tiles. Each pair of flips counts as one turn. Matches disappear, and the final screen shows the total.
+- **Snack Count** asks for a bowl with as many snacks as the example.
+- **Odd One Out** asks for the picture that is different.
+- **Picnic Patterns** asks what comes next in an alternating picture sequence.
+- **More Snacks** asks which bowl contains the most.
+- **Big & Little** asks for the smallest or biggest pear.
+
+Wrong choices leave the same puzzle open for another try. Each game offers replay.
+
+Shape Match sound starts off. The sound button enables quiet, locally generated tones. The game uses original illustrations and makes no requests for external assets. It has no accounts, ads, or analytics.
 
 ## Run locally
 
@@ -20,8 +30,8 @@ Run the optional automated tests with a recent Node.js installation:
 node --test tests/*.test.mjs
 ```
 
-## Checks before publishing
+## Verification
 
-A complete round was played at 390 × 844 and 768 × 1024 in the ChatGPT in-app browser using portrait viewport emulation. Both runs checked a wrong choice, a successful retry, the third choice, completion, and replay. These checks used browser clicks at simulated sizes.
+The Node tests cover Shape Match progression, memory turns and matches, and every puzzle board. Browser checks exercise the menu, game transitions, wrong choices, replay, and the final memory turn total.
 
-Hermes tried the rules and optional tone mapping separately using the local Qwen file-only profile. Both edits failed independent acceptance after the bounded repairs. Codex implemented the released versions and reran the tests.
+Hermes generated the independently verified Picnic Patterns boards. The broader board-generation and memory patches failed independent checks, so Codex completed those pieces.
