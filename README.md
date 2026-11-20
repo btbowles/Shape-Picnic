@@ -1,6 +1,6 @@
 # Shape Picnic
 
-A touch-first suite of seven picture games for preschoolers:
+A touch-first suite of eight picture games for preschoolers:
 
 - **Shape Match** grows from two tiles to six over ten levels, adding colours and rotations.
 - **Memory Pairs** deals six face-down tiles. Each pair of flips counts as one turn. Matches disappear, and the final screen shows the total.
@@ -9,6 +9,7 @@ A touch-first suite of seven picture games for preschoolers:
 - **Picnic Patterns** asks what comes next in an alternating picture sequence.
 - **More Snacks** asks which bowl contains the most.
 - **Big & Little** asks for the smallest or biggest pear.
+- **Snack Catch** asks children to tap gently moving snacks and fill a five-slot basket. Motion can be paused.
 
 Wrong choices leave the same puzzle open for another try. Each game offers replay.
 

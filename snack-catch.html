@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Snack Catch · Shape Picnic</title>
+  <link rel="icon" href="./assets/apple.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css?v=snack-catch">
+  <script type="module" src="./snack-catch.mjs"></script>
+</head>
+<body>
+<main class="picnic">
+  <a class="back-games" href="./?v=snack-catch">‹ All games</a>
+  <header class="topbar">
+    <div class="brand"><img src="./assets/apple.svg" alt=""><h1>Snack Catch</h1></div>
+    <button id="motion" class="sound" type="button" aria-pressed="false">Pause motion</button>
+  </header>
+  <section id="play" class="game">
+    <div class="meadow suite-meadow">
+      <div class="hills" aria-hidden="true"></div>
+      <h2>Catch this snack!</h2>
+      <div id="catch-target" class="target"></div>
+    </div>
+    <div id="catch-field" class="catch-field" aria-label="Snacks to catch"></div>
+    <div id="basket" class="catch-basket"></div>
+    <p id="feedback" class="feedback" role="status"></p>
+  </section>
+  <section id="finish" class="finish" hidden>
+    <img src="./assets/flower.svg" class="prize" alt="">
+    <h2>Basket full!</h2>
+    <button id="replay" type="button">↻ Play again</button>
+  </section>
+</main>
+</body>
+</html>
