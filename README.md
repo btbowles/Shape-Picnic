@@ -1,6 +1,6 @@
 # Shape Picnic
 
-A short, touch-first matching game for preschoolers. Match the picture at the top with the same picture on the picnic blanket. The first three puzzles have two choices and the last three have three. A wrong choice keeps the same puzzle open for another try. After six matches, tap **Play again** for a fresh round.
+A touch-first picnic game for preschoolers with ten levels and three puzzles per level. Match pictures, spot the odd one out, count snacks, finish patterns, remember pictures, compare groups, and pack items in order. The memory levels let the player look again as often as they like. Wrong choices always leave the current puzzle open for another try. After level ten, tap **Play again** to start over.
 
 Sound starts off. The sound button enables quiet, locally generated tones. The game uses original illustrations and makes no requests for external assets. It has no accounts, ads, or analytics.
 
