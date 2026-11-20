@@ -1,6 +1,6 @@
 # Shape Picnic
 
-A touch-first picnic game for preschoolers with ten levels and three puzzles per level. Match pictures, spot the odd one out, count snacks, finish patterns, remember pictures, compare groups, and pack items in order. The memory levels let the player look again as often as they like. Wrong choices always leave the current puzzle open for another try. After level ten, tap **Play again** to start over.
+A touch-first picnic game for preschoolers with ten levels and three picture matches per level. The board grows from two tiles to six. Later levels show the same shape in different colours and turn the tiles by 90°, 180°, or 270°. Match the shape and colour of the example, even if the tile is sideways or upside down. Wrong choices leave the puzzle open for another try. After Level 10, tap **Play again** to start over.
 
 Sound starts off. The sound button enables quiet, locally generated tones. The game uses original illustrations and makes no requests for external assets. It has no accounts, ads, or analytics.
 

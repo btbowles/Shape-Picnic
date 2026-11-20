@@ -1,64 +1,53 @@
+const shapes = ['triangle', 'apple', 'pear', 'star', 'square', 'circle'];
+const palette = ['original', 'blue', 'green'];
+
 export const levels = [
-  { name: 'First bites', mode: 'match', puzzles: [
-    ['circle', ['triangle','circle']], ['square', ['square','circle']], ['triangle', ['circle','triangle']],
-  ] },
-  { name: 'Fill the basket', mode: 'match', puzzles: [
-    ['apple',['square','apple','triangle']], ['pear',['pear','apple','circle']], ['star',['pear','triangle','star']],
-  ] },
-  { name: 'One of a kind', mode: 'odd', puzzles: [
-    ['pear',['apple','apple','pear']], ['star',['star','triangle','triangle']], ['square',['circle','square','circle']],
-  ] },
-  { name: 'Count the snacks', mode: 'count', puzzles: [
-    [1,[2,1,3]], [2,[1,3,2]], [3,[3,2,1]],
-  ] },
-  { name: 'Picnic patterns', mode: 'pattern', puzzles: [
-    ['apple',['pear','apple','star'],['apple','pear','apple','pear']],
-    ['circle',['circle','star','square'],['circle','star','circle','star']],
-    ['triangle',['square','circle','triangle'],['square','triangle','square']],
-  ] },
-  { name: 'Peek and pick', mode: 'memory', puzzles: [
-    ['pear',['apple','pear','star'],['pear']], ['triangle',['triangle','square','circle'],['triangle']], ['apple',['pear','star','apple'],['apple']],
-  ] },
-  { name: 'Which has more?', mode: 'more', puzzles: [
-    [3,[2,3,1]], [4,[4,2,3]], [5,[4,3,5]],
-  ] },
-  { name: 'Double patterns', mode: 'pattern', puzzles: [
-    ['pear',['apple','pear','star'],['apple','apple','pear','apple','apple']],
-    ['star',['triangle','circle','star'],['star','circle','circle','star','circle','circle']],
-    ['circle',['circle','triangle','square'],['triangle','triangle','square','triangle','triangle','square','triangle','triangle']],
-  ] },
-  { name: 'Pack in order', mode: 'sequence', puzzles: [
-    ['apple',['star','apple','pear'],['apple','pear']], ['square',['triangle','circle','square'],['square','circle']], ['pear',['apple','pear','star'],['pear','star','apple']],
-  ] },
-  { name: 'Picnic memory', mode: 'recall', puzzles: [
-    ['pear',['apple','star','pear'],['pear','apple']], ['triangle',['circle','triangle','square'],['triangle','square','circle']], ['star',['star','pear','apple'],['star','pear','star']],
-  ] },
+  { tiles: 2, colours: 1, turns: [0] },
+  { tiles: 3, colours: 1, turns: [0] },
+  { tiles: 3, colours: 2, turns: [0] },
+  { tiles: 4, colours: 2, turns: [0] },
+  { tiles: 4, colours: 2, turns: [90] },
+  { tiles: 4, colours: 2, turns: [90, 180] },
+  { tiles: 5, colours: 2, turns: [90, 180] },
+  { tiles: 5, colours: 2, turns: [90, 180, 270] },
+  { tiles: 6, colours: 2, turns: [90, 180, 270] },
+  { tiles: 6, colours: 3, turns: [90, 180, 270] },
 ];
+const total = 3;
 
 export function createRound() {
-  return { level: 0, index: 0, step: 0, phase: 'play', feedback: '' };
+  return { level: 0, index: 0, phase: 'play', feedback: '' };
 }
 
-export function current(state) {
-  const { name, mode, puzzles } = levels[state.level];
-  const [answer, choices, cue = []] = puzzles[Math.min(state.index, puzzles.length - 1)];
-  return { name, mode, answer, choices, cue, total: puzzles.length };
+export function current({ level, index }) {
+  const { tiles, colours, turns } = levels[level];
+  const turn = Math.min(index, total - 1);
+  const rotation = turns[turn % turns.length];
+  const shapeIndex = (level + turn) % shapes.length;
+  const shape = shapes[shapeIndex];
+  const colour = turn % colours;
+  const target = { shape, colour: palette[colour], rotation: 0 };
+  const choices = [];
+  for (let i = 1; i < colours; i++) {
+    choices.push({ shape, colour: palette[(colour + i) % colours], rotation });
+  }
+  for (let i = 1; choices.length < tiles - 1; i++) {
+    choices.push({ shape: shapes[(shapeIndex + i) % shapes.length], colour: target.colour, rotation: turns[(turn + i) % turns.length] });
+  }
+  choices.splice((level + 1 + turn) % tiles, 0, { ...target, rotation });
+  return { target, choices, total, coloured: colours > 1 };
 }
 
 export function choose(state, choiceIndex) {
   if (state.phase !== 'play') return state;
-  const { mode, answer, choices, cue, total } = current(state);
-  const ordered = mode === 'sequence' || mode === 'recall';
-  if (!Object.hasOwn(choices, choiceIndex) || choices[choiceIndex] !== (ordered ? cue[state.step] : answer)) {
+  const { target, choices, total } = current(state);
+  const tile = choices[choiceIndex];
+  if (tile?.shape !== target.shape || tile.colour !== target.colour) {
     return { ...state, feedback: 'try' };
   }
-  if (ordered && state.step + 1 < cue.length) {
-    return { ...state, step: state.step + 1, feedback: 'yes' };
-  }
-
   const index = state.index + 1;
   const phase = index < total ? 'play' : state.level + 1 < levels.length ? 'ready' : 'complete';
-  return { ...state, index, step: 0, phase, feedback: 'yes' };
+  return { ...state, index, phase, feedback: 'yes' };
 }
 
 export function nextLevel(state) {

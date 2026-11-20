@@ -1,4 +1,4 @@
-import { choose, createRound, current, nextLevel } from './rules.mjs';
+import { choose, createRound, current, nextLevel } from './rules.mjs?v=matching';
 import { notesFor } from './sounds.mjs';
 
 const byId = id => document.getElementById(id);
@@ -9,24 +9,22 @@ const feedback = byId('feedback');
 const finish = byId('finish');
 const sound = byId('sound');
 const replay = byId('replay');
-const peek = byId('peek');
-const prompts = {
-  match: 'Tap the match!', odd: 'Find the different one!', count: 'Find the same number!',
-  pattern: 'What comes next?', memory: 'Remember the picture!', more: 'Which has the most?',
-  sequence: 'Tap them in order!', recall: 'Remember the order!',
-};
-const nameOf = id => id[0].toUpperCase() + id.slice(1);
-
 let state = createRound();
 let enabled = false;
 let audio;
-let showing = true;
 
-function picture(id, alt) {
+function tileName(tile, coloured) {
+  if (!coloured) return tile.shape;
+  return tile.colour === 'original' ? `Original-colour ${tile.shape}` : `${tile.colour} ${tile.shape}`;
+}
+
+function picture(tile, alt) {
   const img = document.createElement('img');
-  img.src = `./assets/${id}.svg`;
+  img.src = `./assets/${tile.shape}.svg`;
   img.alt = alt;
   img.draggable = false;
+  img.dataset.colour = tile.colour;
+  img.style.rotate = `${tile.rotation}deg`;
   return img;
 }
 
@@ -56,15 +54,7 @@ function play(event) {
   }
 }
 
-function snackGroup(count, id) {
-  const group = document.createElement('span');
-  group.className = 'snacks';
-  for (let i = 0; i < count; i++) group.append(picture(id, ''));
-  return group;
-}
-
 function select(button, event) {
-  const previous = state;
   state = choose(state, Number(button.dataset.choice));
   if (state.feedback === 'try') {
     for (const option of choices.children) delete option.dataset.retry;
@@ -73,47 +63,10 @@ function select(button, event) {
     play('try');
     return;
   }
-  if (state.index !== previous.index) showing = true;
   play(state.phase === 'play' ? 'yes' : 'complete');
   render();
   if (state.phase !== 'play') replay.focus();
-  else if (event.detail === 0) (choices.firstElementChild ?? peek).focus();
-}
-
-function renderCue({ mode, answer, cue }) {
-  const memory = mode === 'memory' || mode === 'recall';
-  const pattern = mode === 'pattern';
-  const sequence = mode === 'sequence' || mode === 'recall';
-  target.className = 'target';
-  target.removeAttribute('aria-label');
-  if (mode === 'match') {
-    target.replaceChildren(picture(answer, `Find the ${answer}`));
-  } else if (mode === 'count') {
-    target.replaceChildren(snackGroup(answer, 'apple'));
-    target.setAttribute('aria-label', `${answer} apples`);
-  } else if (mode === 'odd' || mode === 'more') {
-    target.classList.add('strip', 'example');
-    if (mode === 'odd') {
-      target.replaceChildren(picture('flower', ''), picture('flower', ''), picture('star', 'One different picture'));
-    } else {
-      target.replaceChildren(snackGroup(1, 'apple'), snackGroup(3, 'apple'));
-      target.setAttribute('aria-label', 'Three apples are more than one');
-    }
-  } else if (memory && !showing) {
-    target.replaceChildren(Object.assign(document.createElement('span'), { textContent: '?' }));
-    target.setAttribute('aria-label', 'Picture hidden');
-  } else {
-    target.classList.toggle('strip', pattern || sequence);
-    target.replaceChildren(...cue.map((id, i) => {
-      const img = picture(id, nameOf(id));
-      if (sequence && i < state.step) img.className = 'packed';
-      return img;
-    }));
-    if (pattern) target.append(Object.assign(document.createElement('span'), { textContent: '?' }));
-  }
-  peek.hidden = !memory;
-  peek.textContent = showing ? '✓ Ready' : '↶ Look again';
-  return memory && showing;
+  else if (event.detail === 0) choices.firstElementChild.focus();
 }
 
 function render() {
@@ -123,34 +76,29 @@ function render() {
   if (!playing) {
     const done = state.phase === 'complete';
     byId('finish-title').textContent = done ? 'Picnic complete!' : `Level ${state.level + 1} complete!`;
+    replay.classList.toggle('next', !done);
     replay.querySelector('span').textContent = done ? 'Play again' : `Next level ${state.level + 2}`;
     return;
   }
 
   const puzzle = current(state);
-  const { mode, total } = puzzle;
-  byId('level').textContent = `Level ${state.level + 1} · ${puzzle.name}`;
-  byId('prompt').textContent = prompts[mode];
-  const studying = renderCue(puzzle);
-  choices.hidden = studying;
-  choices.style.setProperty('--choices', puzzle.choices.length);
-  choices.replaceChildren(...(studying ? [] : puzzle.choices.map((id, index) => {
+  byId('level').textContent = `Level ${state.level + 1}`;
+  target.replaceChildren(picture(puzzle.target, `Find the ${tileName(puzzle.target, puzzle.coloured)}`));
+  choices.style.setProperty('--choices', Math.min(3, puzzle.choices.length));
+  choices.replaceChildren(...puzzle.choices.map((tile, index) => {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'choice';
     button.dataset.choice = index;
-    const visual = typeof id === 'number' ? snackGroup(id, 'pear') : picture(id, '');
-    const label = typeof id === 'number' ? `${id} ${id === 1 ? 'pear' : 'pears'}` : nameOf(id);
-    if (typeof id !== 'number' && puzzle.choices.indexOf(id) !== puzzle.choices.lastIndexOf(id)) {
-      button.setAttribute('aria-label', `${label}, choice ${index + 1}`);
-    } else button.setAttribute('aria-label', label);
-    button.append(visual);
+    button.setAttribute('aria-label', tileName(tile, puzzle.coloured));
+    button.append(picture(tile, ''));
     button.addEventListener('click', event => select(button, event));
     return button;
-  })));
-  progress.setAttribute('aria-label', `${state.index} of ${total} puzzles`);
+  }));
+
+  progress.setAttribute('aria-label', `${state.index} of ${puzzle.total} puzzles`);
   progress.replaceChildren();
-  for (let i = 0; i < total; i++) {
+  for (let i = 0; i < puzzle.total; i++) {
     const dot = document.createElement('span');
     dot.setAttribute('aria-hidden', 'true');
     if (i < state.index) dot.className = 'filled';
@@ -158,12 +106,6 @@ function render() {
   }
   feedback.textContent = state.feedback === 'yes' ? 'You found it!' : '';
 }
-
-peek.addEventListener('click', () => {
-  showing = !showing;
-  render();
-  if (!showing) choices.firstElementChild.focus();
-});
 
 sound.addEventListener('click', () => {
   enabled = !enabled;
@@ -173,8 +115,7 @@ sound.addEventListener('click', () => {
 });
 replay.addEventListener('click', () => {
   state = state.phase === 'complete' ? createRound() : nextLevel(state);
-  showing = true;
   render();
-  (choices.firstElementChild ?? peek).focus();
+  choices.firstElementChild.focus();
 });
 render();

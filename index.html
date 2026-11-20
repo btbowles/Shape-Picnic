@@ -7,8 +7,8 @@
   <meta name="description" content="A gentle picture-matching picnic for little hands.">
   <title>Shape Picnic</title>
   <link rel="icon" href="./assets/flower.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./styles.css">
-  <script type="module" src="./game.mjs"></script>
+  <link rel="stylesheet" href="./styles.css?v=matching">
+  <script type="module" src="./game.mjs?v=matching"></script>
 </head>
 <body>
   <main class="picnic">
@@ -26,7 +26,6 @@
         <span class="spark three" aria-hidden="true">✿</span><span class="spark four" aria-hidden="true">✦</span>
         <div class="level-label" id="level"></div>
         <div id="target" class="target"></div>
-        <button id="peek" class="peek" type="button" hidden></button>
         <div id="progress" class="progress" aria-label="Round progress"></div>
       </div>
       <div class="mat">
@@ -42,7 +41,7 @@
       <div class="hills" aria-hidden="true"></div>
       <div class="celebration" aria-hidden="true">✦ <img src="./assets/flower.svg" alt=""> ✦</div>
       <h2 id="finish-title">Picnic complete!</h2>
-      <button id="replay" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8a8 8 0 1 1-1 7M5 3v5h5"/></svg> <span>Play again</span></button>
+      <button id="replay" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8a8 8 0 1 1-1 7M5 3v5h5"/><path class="arrow" d="M4 12h15m-6-6 6 6-6 6"/></svg> <span>Play again</span></button>
     </section>
   </main>
 </body>
