@@ -48,7 +48,7 @@ function tile(label, item, select) {
   button.type = 'button';
   button.className = 'choice';
   button.setAttribute('aria-label', label);
-  button.append(item);
+  if (item) button.append(item);
   button.addEventListener('click', select);
   return button;
 }
@@ -104,7 +104,7 @@ function drawMemory(open = memory.open, removed = memory.removed) {
     button.classList.toggle('removed', gone);
     button.classList.toggle('card-back', !faceUp);
     button.setAttribute('aria-label', faceUp ? `Tile ${index + 1}, ${memory.cards[index]}` : `Tile ${index + 1}, face down`);
-    if (!gone) button.replaceChildren(picture(faceUp ? memory.cards[index] : 'flower'));
+    button.replaceChildren(...(faceUp && !gone ? [picture(memory.cards[index])] : []));
   }
 }
 
@@ -177,7 +177,7 @@ function start() {
   board.style.setProperty('--choices', 3);
   if (id === 'memory') {
     memory = newMemory(shuffle(['apple', 'apple', 'pear', 'pear', 'star', 'star']));
-    board.replaceChildren(...memory.cards.map((_, index) => tile('', picture('flower'), () => showMemory(index))));
+    board.replaceChildren(...memory.cards.map((_, index) => tile('', null, () => showMemory(index))));
     drawMemory();
   } else {
     position = 0;
