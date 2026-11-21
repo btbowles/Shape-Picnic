@@ -1,11 +1,16 @@
-import {boards} from './levels.mjs';
+import {boards} from './levels.mjs?v=compact';
+import {tuning} from './tuning.mjs';
+import {createAdvance} from './advance.mjs';
 import {trace, portPoint} from './engine.mjs';
 
 const $ = id => document.getElementById(id);
 const letters = 'ABCDE';
 const svg = $('board');
 const ns = 'http://www.w3.org/2000/svg';
-const pad = .62;
+const pad = tuning.boardPadding;
+const advance = createAdvance(setTimeout, clearTimeout, setLevel);
+document.documentElement.style.setProperty('--main-width', tuning.mainWidth + 'px');
+document.documentElement.style.setProperty('--board-width', tuning.boardWidth + 'px');
 let level = 0, mask = 0, history = [], busy = false, outcome = '';
 const board = () => boards[level];
 const firstMessage = 'Choose a launch opening.';
@@ -50,9 +55,10 @@ function draw() {
       line([a,b-.085],[a,b+.085],'#d4a6cb',.035);
     } else {
       const rising=(t ^ (g===undefined?0:(mask>>g)&1))===0;
-      const v=rising?.31:-.31;
+      const halfLength=g===undefined?tuning.mirrorHalfLength:tuning.gateHalfLength;
+      const v=rising?halfLength:-halfLength;
       const color=g===undefined?'#8bc7eb':'#ffc577';
-      line([a-.31,b+v],[a+.31,b-v],color,.077);
+      line([a-halfLength,b+v],[a+halfLength,b-v],color,.077);
       if(g!==undefined) element('circle',{cx:a,cy:b,r:.083,fill:'#1b2425',stroke:color,'stroke-width':.026});
     }
   });
@@ -72,7 +78,7 @@ function draw() {
 }
 
 function ball(point) {
-  element('circle',{cx:point[0],cy:point[1],r:board().size*.014,fill:'#fff',stroke:'#d4ffff','stroke-width':.018,id:'ball'});
+  element('circle',{cx:point[0],cy:point[1],r:board().size*tuning.ballRadius,fill:'#fff',stroke:'#d4ffff','stroke-width':.018,id:'ball'});
 }
 
 function ui() {
@@ -91,6 +97,7 @@ function ui() {
 
 function setLevel(index) {
   if(busy)return;
+  advance.clear();
   level=index;
   $('level').value=String(index);
   mask=0;history=[];outcome='';message=firstMessage;
@@ -108,7 +115,7 @@ function launch(index) {
   busy=true;message='Ball in play…';draw();ui();
   const lengths=steps.slice(1).map((s,i)=>Math.hypot(s.point[0]-steps[i].point[0],s.point[1]-steps[i].point[1]));
   let start, segment=0, spent=0;
-  const speed=board().size*1.4;
+  const speed=board().size*tuning.speed;
   function frame(now) {
     start??=now;
     const distance=(now-start)*speed/1000;
@@ -120,7 +127,9 @@ function launch(index) {
       busy=false;mask=shot.mask;
       history.push({...shot,before,launch:index});
       if(shot.status==='finish'){
-        outcome='win';message=level===boards.length-1?'Circuit complete.':'Finish reached.';
+        const finalLevel=level===boards.length-1;
+        outcome='win';message=finalLevel?'Circuit complete.':'Level complete.';
+        if(!finalLevel) advance.queue(level+1);
       } else if(history.length===board().balls) {
         outcome='fail';message='Out of balls. Undo a shot or reset.';
       } else message='Exited through '+letters[shot.slot]+'. Choose your next opening.';
@@ -136,7 +145,7 @@ function launch(index) {
 }
 
 $('level').replaceChildren(...boards.map((_,i)=>new Option(String(i+1),String(i))));
-$('undo').onclick=()=>{if(busy||!history.length)return;mask=history.pop().before;outcome='';message='Shot undone.';draw();ui();};
+$('undo').onclick=()=>{if(busy||!history.length)return;advance.clear();mask=history.pop().before;outcome='';message='Shot undone.';draw();ui();};
 $('reset').onclick=()=>setLevel(level);
 $('next').onclick=()=>setLevel(level+1);
 $('level').onchange=e=>setLevel(Number(e.target.value));

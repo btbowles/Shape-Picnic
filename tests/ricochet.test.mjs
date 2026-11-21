@@ -29,7 +29,7 @@ test('ten levels have one solution using the full budget and no trapped shots', 
   assert.equal(boards.length, 10);
   let previous = 0;
   for (const [index,board] of boards.entries()) {
-    assert.ok(board.balls >= previous);
+    assert.ok(board.balls >= previous && board.balls <= 4);
     previous = board.balls;
     assert.equal(allShotsExit(board), true, `Level ${index+1}`);
     const result = solve(board, board.balls);
